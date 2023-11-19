@@ -21,24 +21,29 @@ export default function Home() {
     if (!input) {
       setErrorMessage('Please enter a number');
       setBoard([[[]]]);
+      setFirst(true);
       return;
     }
 
     if (isNaN(parseInt(input))) {
       setErrorMessage('Please enter a valid number');
       setBoard([[[]]]);
+      setFirst(true);
       return;
     }
 
-    if (parseInt(input) < 4) {
+    if (!(parseInt(input) === 1 || parseInt(input) >= 4) ) {
       setErrorMessage('Please enter a number greater than 3');
       setBoard([[[]]]);
+      setFirst(true);
+
       return;
     }
 
     if (parseInt(input) > 10) {
       setErrorMessage('Please enter a number less than 10');
       setBoard([[[]]]);
+      setFirst(true);
       return;
     }
 
@@ -92,7 +97,6 @@ const BoardDisplay = ({ solutions, first }: { solutions: string[][][], first: bo
   return (
     <div className="flex flex-col w-full items-center justify-center gap-8">
       {/* amount of solutions */}
-
       {
         !first && <p className="text-white text-opacity-50">Amount of solutions: {solutions.length}</p>
 
@@ -106,9 +110,7 @@ const BoardDisplay = ({ solutions, first }: { solutions: string[][][], first: bo
               !first &&  <h1 key={index} className="text-2xl font-bold text-white font-title">Solution {index + 1}</h1>
 
             }
-
            
-
             {solution.map((row, rowIndex) => {
               return (
                 <div key={rowIndex} className="flex flex-row w-3/4 md:w-1/2 justify-center items-center gap-2">
