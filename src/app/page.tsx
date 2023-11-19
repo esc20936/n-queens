@@ -7,32 +7,36 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [board, setBoard] = useState<string[][][]>([[[]]]);
+  const [first, setFirst] = useState<boolean>(true);
 
   const handleInputClick = () => {
     inputRef.current?.focus();
   }
 
   const handleButtonClick = () => {
+
+    setFirst(false);
+
     const input = inputRef.current?.value;
-    if(!input) {
+    if (!input) {
       setErrorMessage('Please enter a number');
       setBoard([[[]]]);
       return;
     }
 
-    if(isNaN(parseInt(input))) {
+    if (isNaN(parseInt(input))) {
       setErrorMessage('Please enter a valid number');
       setBoard([[[]]]);
       return;
     }
 
-    if(parseInt(input) < 4) {
+    if (parseInt(input) < 4) {
       setErrorMessage('Please enter a number greater than 3');
       setBoard([[[]]]);
       return;
     }
 
-    if(parseInt(input) > 10) {
+    if (parseInt(input) > 10) {
       setErrorMessage('Please enter a number less than 10');
       setBoard([[[]]]);
       return;
@@ -43,7 +47,7 @@ export default function Home() {
 
     const result = solveNQueens(value);
 
-    if(result.length === 0) {
+    if (result.length === 0) {
       setErrorMessage('No solution found');
       return;
     }
@@ -52,7 +56,7 @@ export default function Home() {
     setBoard(result);
 
   }
-  
+
 
   return (
     <main className="flex min-h-screen w-full bg flex-col items-center justify-between p-4 md:p-24 bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0">
@@ -64,7 +68,7 @@ export default function Home() {
         >
           <input className="w-5/6 bg-transparent text-white focus:outline-none" placeholder="Enter a number" ref={inputRef} />
         </div>
-          <p className="text-white text-opacity-50">{errorMessage}</p>
+        <p className="text-white text-opacity-50">{errorMessage}</p>
         {/*blue button */}
         <button className="flex flex-row w-1/2 md:w-1/4 h-[50px] rounded-lg bg-zinc-600/30 justify-center items-center hover:bg-blue-500 hover:transition-all"
           onClick={handleButtonClick}
@@ -74,9 +78,9 @@ export default function Home() {
 
         {/* solutions */}
         <div className="flex flex-col w-full items-center justify-center gap-8">
-            <BoardDisplay solutions={board} />;
+          <BoardDisplay solutions={board} first={first} />;
 
-          </div>
+        </div>
 
 
       </div>
@@ -84,15 +88,26 @@ export default function Home() {
   )
 }
 
-const BoardDisplay = ({ solutions }: { solutions: string[][][] }) => {
+const BoardDisplay = ({ solutions, first }: { solutions: string[][][], first: boolean }) => {
   return (
     <div className="flex flex-col w-full items-center justify-center gap-8">
       {/* amount of solutions */}
-      <p className="text-white text-opacity-50">Amount of solutions: {solutions.length}</p>
+
+      {
+        !first && <p className="text-white text-opacity-50">Amount of solutions: {solutions.length}</p>
+
+      }
+
       {solutions.map((solution, index) => {
         return (
           <div key={index} className="flex flex-col w-full items-center justify-center gap-8">
-          <h1 key={index} className="text-2xl font-bold text-white font-title">Solution {index + 1}</h1>
+
+            {
+              !first &&  <h1 key={index} className="text-2xl font-bold text-white font-title">Solution {index + 1}</h1>
+
+            }
+
+           
 
             {solution.map((row, rowIndex) => {
               return (
